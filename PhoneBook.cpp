@@ -20,14 +20,14 @@ struct Node
 
 Node *head = nullptr;
 int contactCount = 0;
-string defaultFileName = "phonebook.dat";
 
+void sortedInsert(Node *newNode);
 void addContact();
 void searchContact();
 void editContact();
 void deleteContact();
 void displayAllContacts();
-void displayAlphabetical();
+void displayAlphabetically();
 void displayByTags();
 void showTotalContactNumber();
 void importExportContacts();
@@ -86,19 +86,8 @@ int main()
 	return 0;
 }
 
-void addContact()
+void sortedInsert(Node *newNode)
 {
-	clearScreen();
-	string name, phone, tag;
-	cin.ignore();
-	cout << "Enter Name: ";
-	getline(cin, name);
-	cout << "Enter Phone Number: ";
-	getline(cin, phone);
-	cout << "Enter Tag (e.g., Family, Friend, Work): ";
-	getline(cin, tag);
-
-	Node *newNode = new Node(name, phone, tag);
 	if (head == nullptr || head->name >= newNode->name)
 	{
 		newNode->next = head;
@@ -114,6 +103,22 @@ void addContact()
 		newNode->next = current->next;
 		current->next = newNode;
 	}
+}
+
+void addContact()
+{
+	clearScreen();
+	string name, phone, tag;
+	cin.ignore();
+	cout << "Enter Name: ";
+	getline(cin, name);
+	cout << "Enter Phone Number: ";
+	getline(cin, phone);
+	cout << "Enter Tag (e.g., Family, Friend, Work): ";
+	getline(cin, tag);
+
+	Node *newNode = new Node(name, phone, tag);
+	sortedInsert(newNode);
 	contactCount++;
 	cout << el << "Contact added successfully!" << el;
 	pressEnterToContinue();
@@ -177,42 +182,97 @@ void searchContact()
 void editContact()
 {
 	clearScreen();
-	string searchQuery;
+	cout << "Edit by:" << el;
+	cout << "1. Name" << el;
+	cout << "2. Phone Number" << el;
+	cout << "Enter your choice: ";
+	int choice;
+	cin >> choice;
 	cin.ignore();
-	cout << "Enter the name of the contact to edit: ";
-	getline(cin, searchQuery);
 
-	Node *current = head;
-	while (current != nullptr && current->name != searchQuery)
+	string query;
+	if (choice == 1)
 	{
-		current = current->next;
+		cout << "Enter Name to find contact to edit: ";
+		getline(cin, query);
 	}
-
-	if (current == nullptr)
+	else if (choice == 2)
 	{
-		cout << "Contact not found." << el;
+		cout << "Enter Phone Number to find contact to edit: ";
+		getline(cin, query);
 	}
 	else
 	{
-		cout << el << "Editing Contact: " << current->name << el;
-		cout << "Enter new Name (or press Enter to keep '" << current->name << "'): ";
+		cout << "Invalid choice." << el;
+		pressEnterToContinue();
+		return;
+	}
+
+	vector<Node*> matches;
+	Node *current = head;
+	while (current != nullptr)
+	{
+		if ((choice == 1 && current->name == query) || (choice == 2 && current->phone == query))
+		{
+			matches.push_back(current);
+		}
+		current = current->next;
+	}
+
+	Node *nodeToEdit = nullptr;
+
+	if (matches.empty())
+	{
+		cout << "Contact not found." << el;
+	}
+	else if (matches.size() == 1)
+	{
+		nodeToEdit = matches[0];
+	}
+	else
+	{
+		cout << "Multiple contacts found. Please choose which one to edit:" << el;
+		for (int i = 0; i < matches.size(); i++)
+		{
+			cout << i + 1 << ". Name: " << matches[i]->name << ", Phone: " << matches[i]->phone << ", Tag: " << matches[i]->tag << el;
+		}
+		cout << "Enter your choice (or 0 to cancel): ";
+		int editChoice;
+		cin >> editChoice;
+		cin.ignore();
+
+		if (editChoice > 0 && editChoice <= matches.size())
+		{
+			nodeToEdit = matches[editChoice - 1];
+		}
+		else
+		{
+			cout << "Edit cancelled." << el;
+		}
+	}
+
+	if (nodeToEdit != nullptr)
+	{
+		cout << el << "Editing Contact: " << nodeToEdit->name << el;
+		cout << "Enter new Name (or press Enter to keep '" << nodeToEdit->name << "'): ";
 		string newName;
 		getline(cin, newName);
 
-		cout << "Enter new Phone Number (or press Enter to keep '" << current->phone << "'): ";
+		cout << "Enter new Phone Number (or press Enter to keep '" << nodeToEdit->phone << "'): ";
 		string newPhone;
 		getline(cin, newPhone);
 
-		cout << "Enter new Tag (or press Enter to keep '" << current->tag << "'): ";
+		cout << "Enter new Tag (or press Enter to keep '" << nodeToEdit->tag << "'): ";
 		string newTag;
 		getline(cin, newTag);
 
-		if (!newName.empty()) current->name = newName;
-		if (!newPhone.empty()) current->phone = newPhone;
-		if (!newTag.empty()) current->tag = newTag;
+		if (!newName.empty()) nodeToEdit->name = newName;
+		if (!newPhone.empty()) nodeToEdit->phone = newPhone;
+		if (!newTag.empty()) nodeToEdit->tag = newTag;
 
 		cout << el << "Contact updated successfully!" << el;
 	}
+
 	pressEnterToContinue();
 }
 
@@ -226,7 +286,7 @@ void deleteContact()
 	int choice;
 	cin >> choice;
 	cin.ignore();
-    cout << el;
+	cout << el;
 
 	string query;
 	if (choice == 1)
@@ -326,7 +386,7 @@ void displayAllContacts()
 {
 	clearScreen();
 	cout << "Display Options:" << el;
-	cout << "1. List All Contacts (Alphabetical)" << el;
+	cout << "1. List All Contacts (Alphabetical Order)" << el;
 	cout << "2. Group by Tags" << el;
 	cout << "Enter your choice: ";
 	int choice;
@@ -334,7 +394,7 @@ void displayAllContacts()
 
 	if (choice == 1)
 	{
-		displayAlphabetical();
+		displayAlphabetically();
 	}
 	else if (choice == 2)
 	{
@@ -347,7 +407,7 @@ void displayAllContacts()
 	pressEnterToContinue();
 }
 
-void displayAlphabetical()
+void displayAlphabetically()
 {
 	clearScreen();
 	cout << "All Contacts (Alphabetical Order):" << el;
@@ -389,7 +449,7 @@ void displayByTags()
 		current = current->next;
 	}
 
-	for (const auto &tag : tags)
+	for (auto tag: tags)
 	{
 		cout << "------ Tag: " << tag << " ------" << el;
 		current = head;
@@ -420,22 +480,32 @@ void importExportContacts()
 	cout << "Import/Export Contacts:" << el;
 	cout << "1. Import from CSV" << el;
 	cout << "2. Export to CSV" << el;
-	cout << "Enter choice: ";
+	cout << "Enter your choice: ";
 	int choice;
 	cin >> choice;
 	cin.ignore();
 
-	string filename;
-	cout << "Enter CSV filename (e.g., contacts.csv): ";
-	getline(cin, filename);
+	if (choice == 1 || choice == 2)
+	{
+		string filename;
+		cout << "Enter CSV filename: ";
+		getline(cin, filename);
 
-	if (choice == 1)
-	{
-		importFromCSV(filename);
-	}
-	else if (choice == 2)
-	{
-		exportToCSV(filename);
+		if (filename.empty())
+		{
+			cout << "Filename cannot be empty. Operation cancelled." << el;
+		}
+		else
+		{
+			if (choice == 1)
+			{
+				importFromCSV(filename);
+			}
+			else
+			{
+				exportToCSV(filename);
+			}
+		}
 	}
 	else
 	{
@@ -465,21 +535,7 @@ void importFromCSV(string &filename)
 		getline(ss, tag, ',');
 
 		Node *newNode = new Node(name, phone, tag);
-		if (head == nullptr || head->name >= newNode->name)
-		{
-			newNode->next = head;
-			head = newNode;
-		}
-		else
-		{
-			Node *current = head;
-			while (current->next != nullptr && current->next->name < newNode->name)
-			{
-				current = current->next;
-			}
-			newNode->next = current->next;
-			current->next = newNode;
-		}
+		sortedInsert(newNode);
 		contactCount++;
 		importedCount++;
 	}
@@ -513,17 +569,32 @@ void saveLoadFromFile()
 	cout << "Save/Load Options:" << el;
 	cout << "1. Save contacts to file" << el;
 	cout << "2. Load contacts from file" << el;
-	cout << "Enter choice: ";
+	cout << "Enter your choice: ";
 	int choice;
 	cin >> choice;
+	cin.ignore();
 
-	if (choice == 1)
+	if (choice == 1 || choice == 2)
 	{
-		saveToFile(defaultFileName);
-	}
-	else if (choice == 2)
-	{
-		loadFromFile(defaultFileName);
+		string filename;
+		cout << "Enter filename: ";
+		getline(cin, filename);
+
+		if (filename.empty())
+		{
+			cout << "Filename cannot be empty. Operation cancelled." << el;
+		}
+		else
+		{
+			if (choice == 1)
+			{
+				saveToFile(filename);
+			}
+			else
+			{
+				loadFromFile(filename);
+			}
+		}
 	}
 	else
 	{
@@ -534,24 +605,17 @@ void saveLoadFromFile()
 
 void saveToFile(string &filename)
 {
-	ofstream file(filename, ios::out | ios::binary);
+	ofstream file(filename);
 	if (!file.is_open())
 	{
 		cout << "Error saving contacts." << el;
 		return;
 	}
+
 	Node *current = head;
 	while (current != nullptr)
 	{
-		int nameLen = current->name.length();
-		int phoneLen = current->phone.length();
-		int tagLen = current->tag.length();
-		file.write(reinterpret_cast<const char *>(&nameLen), sizeof(nameLen));
-		file.write(current->name.c_str(), nameLen);
-		file.write(reinterpret_cast<const char *>(&phoneLen), sizeof(phoneLen));
-		file.write(current->phone.c_str(), phoneLen);
-		file.write(reinterpret_cast<const char *>(&tagLen), sizeof(tagLen));
-		file.write(current->tag.c_str(), tagLen);
+		file << current->name << "|" << current->phone << "|" << current->tag << el;
 		current = current->next;
 	}
 	file.close();
@@ -560,61 +624,26 @@ void saveToFile(string &filename)
 
 void loadFromFile(string &filename)
 {
-	ifstream file(filename, ios::in | ios::binary);
+	ifstream file(filename);
 	if (!file.is_open())
 	{
 		cout << "No saved data found or could not open file." << el;
 		return;
 	}
 
-	while (head != nullptr)
-	{
-		Node *temp = head;
-		head = head->next;
-		delete temp;
-	}
+	head = nullptr;
 	contactCount = 0;
 
-	while (file.peek() != EOF)
+	string line, name, phone, tag;
+	while (getline(file, line))
 	{
-		int nameLen, phoneLen, tagLen;
-		file.read(reinterpret_cast<char *>(&nameLen), sizeof(nameLen));
-		char *nameBuf = new char[nameLen + 1];
-		file.read(nameBuf, nameLen);
-		nameBuf[nameLen] = '\0';
-		string name(nameBuf);
-		delete[] nameBuf;
-
-		file.read(reinterpret_cast<char *>(&phoneLen), sizeof(phoneLen));
-		char *phoneBuf = new char[phoneLen + 1];
-		file.read(phoneBuf, phoneLen);
-		phoneBuf[phoneLen] = '\0';
-		string phone(phoneBuf);
-		delete[] phoneBuf;
-
-		file.read(reinterpret_cast<char *>(&tagLen), sizeof(tagLen));
-		char *tagBuf = new char[tagLen + 1];
-		file.read(tagBuf, tagLen);
-		tagBuf[tagLen] = '\0';
-		string tag(tagBuf);
-		delete[] tagBuf;
+		stringstream ss(line);
+		getline(ss, name, '|');
+		getline(ss, phone, '|');
+		getline(ss, tag, '|');
 
 		Node *newNode = new Node(name, phone, tag);
-		if (head == nullptr || head->name >= newNode->name)
-		{
-			newNode->next = head;
-			head = newNode;
-		}
-		else
-		{
-			Node *current = head;
-			while (current->next != nullptr && current->next->name < newNode->name)
-			{
-				current = current->next;
-			}
-			newNode->next = current->next;
-			current->next = newNode;
-		}
+		sortedInsert(newNode);
 		contactCount++;
 	}
 	file.close();

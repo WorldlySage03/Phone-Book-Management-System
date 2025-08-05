@@ -1,0 +1,1308 @@
+--------------------------------------------------
+1
+1. Write a program to sort n numbers using Insertion Sort algorithm.
+--------------------------------------------------
+
+#include <bits/stdc++.h>
+using namespace std;
+
+#define sp " "
+#define el '\n'
+
+int main()
+{
+      int n;
+      cin >> n;
+
+      int a[n];
+      for (int i = 0; i < n; i++)
+      {
+            cin >> a[i];
+      }
+
+      for (int i = 1; i < n; i++)
+      {
+            int j = i - 1, k = a[i];
+            while (j >= 0 && a[j] >= k)
+            {
+                  a[j + 1] = a[j];
+                  j--;
+            }
+            a[j + 1] = k;
+      }
+
+      for (int i = 0; i < n; i++)
+      {
+            cout << a[i] << sp;
+      }
+      cout << el;
+
+      return 0;
+}
+
+
+--------------------------------------------------
+2
+2. Write a program to sort n numbers using Selection Sort algorithm.
+--------------------------------------------------
+
+#include <bits/stdc++.h>
+using namespace std;
+
+#define sp " "
+#define el '\n'
+
+int main()
+{
+      int n;
+      cin >> n;
+
+      int a[n];
+      for (int i = 0; i < n; i++)
+      {
+            cin >> a[i];
+      }
+
+      for (int i = 0; i < n; i++)
+      {
+            int m = a[i], p = i;
+            for (int j = i + 1; j < n; j++)
+            {
+                  if (m > a[j])
+                  {
+                        m = a[j];
+                        p = j;
+                  }
+            }
+            swap(a[i], a[p]);
+      }
+
+      for (int i = 0; i < n; i++)
+      {
+            cout << a[i] << sp;
+      }
+      cout << el;
+
+      return 0;
+}
+
+
+--------------------------------------------------
+3
+3. Write a program to sort n numbers using Quick Sort algorithm.
+--------------------------------------------------
+
+#include <bits/stdc++.h>
+using namespace std;
+
+#define sp " "
+#define el '\n'
+
+int main()
+{
+      int n;
+      cin >> n;
+
+      int a[n];
+      for (int i = 0; i < n; i++)
+      {
+            cin >> a[i];
+      }
+
+      sort(a, a + n);
+
+      for (int i = 0; i < n; i++)
+      {
+            cout << a[i] << sp;
+      }
+      cout << el;
+
+      return 0;
+}
+
+
+--------------------------------------------------
+4
+4. Write a program to merge two sorted list.
+--------------------------------------------------
+
+#include <bits/stdc++.h>
+using namespace std;
+
+#define sp " "
+#define el '\n'
+
+int main()
+{
+    int n1, n2;
+    cin >> n1;
+    int a[n1];
+    for (int i = 0; i < n1; i++)
+        cin >> a[i];
+
+    cin >> n2;
+    int b[n2];
+    for (int i = 0; i < n2; i++)
+        cin >> b[i];
+
+    int result[n1 + n2];
+    int i = 0, j = 0, k = 0;
+
+    while (i < n1 && j < n2)
+    {
+        if (a[i] <= b[j])
+            result[k++] = a[i++];
+        else
+            result[k++] = b[j++];
+    }
+
+    while (i < n1)
+        result[k++] = a[i++];
+
+    while (j < n2)
+        result[k++] = b[j++];
+
+    for (int i = 0; i < n1 + n2; i++)
+    {
+        cout << result[i] << sp;
+    }
+    cout << el;
+
+    return 0;
+}
+
+
+--------------------------------------------------
+5
+5. Write a program to sort n numbers using Merge Sort algorithm.
+--------------------------------------------------
+
+#include <bits/stdc++.h>
+using namespace std;
+
+#define sp " "
+#define el '\n'
+
+void merge(int a[], int l, int mid, int r)
+{
+      int n1 = mid - l + 1;
+      int n2 = r - mid;
+
+      int t1[n1], t2[n2];
+
+      for (int i = 0; i < n1; i++)
+            t1[i] = a[i + l];
+      for (int i = 0; i < n2; i++)
+            t2[i] = a[i + mid + 1];
+
+      int i = 0, j = 0, k = l;
+
+      while (i < n1 && j < n2)
+      {
+            if (t1[i] <= t2[j]) a[k++] = t1[i++];
+            else a[k++] = t2[j++];
+      }
+      while (i < n1) a[k++] = t1[i++];
+      while (j < n2) a[k++] = t2[j++];
+}
+
+void mergeSort(int a[], int l, int r)
+{
+      if (l < r)
+      {
+            int mid = l + (r - l) / 2;
+
+            mergeSort(a, l, mid);
+            mergeSort(a, mid + 1, r);
+
+            merge(a, l, mid, r);
+      }
+}
+
+int main()
+{
+      int n;
+      cin >> n;
+
+      int a[n];
+      for (int i = 0; i < n; i++)
+      {
+            cin >> a[i];
+      }
+
+      mergeSort(a, 0, n - 1);
+
+      for (int i = 0; i < n; i++)
+      {
+            cout << a[i] << sp;
+      }
+      cout << el;
+
+      return 0;
+}
+
+
+--------------------------------------------------
+6
+6. Write a program to create a Binary Search Tree of n elements and then display the elements (preorder, inorder and postorder) of the tree.
+--------------------------------------------------
+
+#include <bits/stdc++.h>
+using namespace std;
+
+#define sp " "
+#define el '\n'
+
+struct Node
+{
+      int num;
+      struct Node* left;
+      struct Node* right;
+};
+
+Node* makeNode(int x)
+{
+      Node* temp = new Node();
+      temp->num = x;
+      temp->left = temp->right = nullptr;
+      return temp;
+}
+
+Node* insert(Node* root, int x)
+{
+      if (root == nullptr) root = makeNode(x);
+      else if (x <= root->num) root->left = insert(root->left, x);
+      else root->right = insert(root->right, x);
+      return root;
+}
+
+void preOrder(Node *root)
+{
+      if (root != nullptr)
+      {
+            cout << root->num << sp;
+            preOrder(root->left);
+            preOrder(root->right);
+      }
+}
+
+void inOrder(Node *root)
+{
+      if (root != nullptr)
+      {
+            inOrder(root->left);
+            cout << root->num << sp;
+            inOrder(root->right);
+      }
+}
+
+void postOrder(Node *root)
+{
+      if (root != nullptr)
+      {
+            postOrder(root->left);
+            postOrder(root->right);
+            cout << root->num << sp;
+      }
+}
+
+void display(Node* root)
+{
+      cout << "Pre-order: ";
+      preOrder(root);
+      cout << el;
+      cout << "In-order: ";
+      inOrder(root);
+      cout << el;
+      cout << "Post-order: ";
+      postOrder(root);
+      cout << el;
+}
+
+int main()
+{
+      Node* root = nullptr;
+
+      int n;
+      cin >> n;
+
+      for (int i = 0; i < n; i++)
+      {
+            int t;
+            cin >> t;
+
+            root = insert(root, t);
+      }
+
+      display(root);
+}
+
+
+--------------------------------------------------
+7
+7. Write a program to create a Binary Search Tree of n elements and then search an element from the tree.
+--------------------------------------------------
+
+#include <bits/stdc++.h>
+using namespace std;
+
+#define sp " "
+#define el '\n'
+
+struct Node
+{
+      int num;
+      struct Node* left;
+      struct Node* right;
+};
+
+Node* makeNode(int x)
+{
+      Node* temp = new Node();
+      temp->num = x;
+      temp->left = temp->right = nullptr;
+      return temp;
+}
+
+Node* insert(Node* root, int x)
+{
+      if (root == nullptr) root = makeNode(x);
+      else if (x <= root->num) root->left = insert(root->left, x);
+      else root->right = insert(root->right, x);
+      return root;
+}
+
+bool search(Node* root, int x)
+{
+      if (root == nullptr) return false;
+      else if (x == root->num) return true;
+      else if (x <= root->num) return search(root->left, x);
+      else return search(root->right, x);
+}
+
+void display(Node *root)
+{
+      if (root != nullptr)
+      {
+            display(root->left);
+            cout << root->num << sp;
+            display(root->right);
+      }
+}
+
+int main()
+{
+      Node* root = nullptr;
+
+      int n;
+      cin >> n;
+
+      for (int i = 0; i < n; i++)
+      {
+            int t;
+            cin >> t;
+
+            root = insert(root, t);
+      }
+      display(root);
+      cout << el;
+
+      int ele;
+      cin >> ele;
+
+      if (search(root, ele)) cout << "Element " << ele << " exists." << el;
+      else cout << "Element " << ele << " does not exist." << el;
+}
+
+
+--------------------------------------------------
+8
+8. Write a program to create a Binary Search Tree of n elements and then delete an element from the tree.
+--------------------------------------------------
+
+#include <bits/stdc++.h>
+using namespace std;
+
+#define sp " "
+#define el '\n'
+
+struct BstNode
+{
+      int num;
+      BstNode* left;
+      BstNode* right;
+};
+
+BstNode* createNode(int x)
+{
+      BstNode* newNode = new BstNode();
+      newNode->num = x;
+      newNode->left = newNode->right = nullptr;
+      return newNode;
+}
+
+BstNode* insert(BstNode* rootptr, int x)
+{
+      if (rootptr == nullptr) rootptr = createNode(x);
+      else if (x <= rootptr->num) rootptr->left = insert(rootptr->left, x);
+      else  rootptr->right = insert(rootptr->right, x);
+      return rootptr;
+}
+
+void display(BstNode* rootptr)
+{
+      if (rootptr != nullptr)
+      {
+            display(rootptr->left);
+            cout << rootptr->num << sp;
+            display(rootptr->right);
+      }
+}
+
+BstNode* FindMin(BstNode* rootptr)
+{
+      while (rootptr->left != nullptr) rootptr = rootptr->left;
+      return rootptr;
+}
+
+BstNode* del(BstNode* rootptr, int x)
+{
+      if (rootptr == nullptr) return rootptr;
+      else if (x < rootptr->num) rootptr->left = del(rootptr->left, x);
+      else if (x > rootptr->num) rootptr->right = del(rootptr->right, x);
+      else
+      {
+            if (rootptr->left == nullptr && rootptr->right == nullptr)
+            {
+                  delete rootptr;
+                  rootptr = nullptr;
+            }
+            else if (rootptr->left == nullptr)
+            {
+                  BstNode* t = rootptr;
+                  rootptr = rootptr->right;
+                  delete t;
+            }
+            else if (rootptr->right == nullptr)
+            {
+                  BstNode* t = rootptr;
+                  rootptr = rootptr->left;
+                  delete t;
+            }
+            else
+            {
+                  BstNode* t = FindMin(rootptr->right);
+                  rootptr->num = t->num;
+                  rootptr->right = del(rootptr->right, t->num);
+            }
+      }
+      return rootptr;
+}
+
+int main()
+{
+      BstNode* rootptr = nullptr;
+
+      int n;
+      cin >> n;
+
+      for (int i = 0; i < n; i++)
+      {
+            int x;
+            cin >> x;
+
+            rootptr = insert(rootptr, x);
+      }
+
+      display(rootptr);
+      cout << el;
+
+      int x;
+      cout << "Element to delete: ";
+      cin >> x;
+
+      rootptr = del(rootptr, x);
+
+      display(rootptr);
+}
+
+
+--------------------------------------------------
+9
+9. Write a program to create a Maxheap of n elements and then display the elements of the heap.
+--------------------------------------------------
+
+#include <bits/stdc++.h>
+using namespace std;
+
+#define sp " "
+#define el '\n'
+
+void heapify(int a[], int i)
+{
+      for (; i > 0; i = (i - 1) / 2)
+      {
+            if (a[(i - 1) / 2] < a[i])
+                  swap(a[(i - 1) / 2], a[i]);
+            else break;
+      }
+}
+
+int main()
+{
+      int n;
+      cin >> n;
+
+      int a[n];
+      for (int i = 0; i < n; i++)
+      {
+            cin >> a[i];
+            heapify(a, i);
+      }
+
+      for (int i = 0, k = 1, t = 0; i < n; k *= 2, t++)
+      {
+            cout << "Step - " << t << ": ";
+            for (int j = 0; i < n && j < k; i++, j++)
+            {
+                  cout << a[i] << sp;
+            }
+            cout << el;
+      }
+      cout << el;
+}
+
+
+--------------------------------------------------
+10
+10. Write a program to create a Maxheap of n elements and then delete an element from the heap.
+--------------------------------------------------
+
+#include <bits/stdc++.h>
+using namespace std;
+
+#define sp " "
+#define el '\n'
+
+void heapify(int a[], int i)
+{
+      for (; i > 0; i = (i - 1) / 2)
+      {
+            if (a[(i - 1) / 2] < a[i])
+                  swap(a[(i - 1) / 2], a[i]);
+            else break;
+      }
+}
+
+int main()
+{
+      int n;
+      cin >> n;
+
+      int a[n];
+      for (int i = 0; i < n; i++)
+      {
+            cin >> a[i];
+            heapify(a, i);
+      }
+
+      for (int i = 0, k = 1, t = 0; i < n; k *= 2, t++)
+      {
+            cout << "Step - " << t << ": ";
+            for (int j = 0; i < n && j < k; i++, j++)
+            {
+                  cout << a[i] << sp;
+            }
+            cout << el;
+      }
+      cout << el;
+
+      int del;
+      cout << "Index of the element to delete: ";
+      cin >> del;
+      cout << el;
+
+      swap(a[del], a[n - 1]);
+      n--;
+
+      for (int i = del; i < n;)
+      {
+            
+            if (i * 2 + 2 < n && a[i * 2 + 1] <= a[i * 2 + 2] && a[i] <= a[i * 2 + 2])
+            {
+                  swap(a[i], a[i * 2 + 2]);
+                  i = (i * 2) + 2;
+            }
+            else if (i * 2 + 2 < n && a[i * 2 + 1] > a[i * 2 + 2] && a[i] <= a[i * 2 + 1])
+            {
+                  swap(a[i], a[i * 2 + 1]);
+                  i = (i * 2) + 1;
+            }
+            else if (i * 2 + 1 < n && a[i] < a[i * 2 + 1])
+            {
+                  swap(a[i], a[i * 2 + 1]);
+                  i = (i * 2) + 1;
+            }
+            else break;
+      }
+
+      for (int i = 0, k = 1, t = 0; i < n; k *= 2, t++)
+      {
+            cout << "Step - " << t << ": ";
+            for (int j = 0; i < n && j < k; i++, j++)
+            {
+                  cout << a[i] << sp;
+            }
+            cout << el;
+      }
+      cout << el;
+}
+
+
+--------------------------------------------------
+11
+11. Write a program to sort n numbers using Heap sort algorithm.
+--------------------------------------------------
+
+#include <bits/stdc++.h>
+using namespace std;
+
+#define sp " "
+#define el '\n'
+
+void heapify(int a[], int i)
+{
+      for (; i > 0; i = (i - 1) / 2)
+      {
+            if (a[(i - 1) / 2] < a[i])
+                  swap(a[(i - 1) / 2], a[i]);
+            else break;
+      }
+}
+
+void heapSort(int a[], int n)
+{
+      while (n--)
+      {
+            swap(a[0], a[n]);
+            for (int i = 0; i < n;)
+            {
+                  if (i * 2 + 2 < n && a[i * 2 + 1] >= a[i * 2 + 2] && a[i] < a[i * 2 + 1])
+                  {
+                        swap(a[i], a[i * 2 + 1]);
+                        i = i * 2 + 1;
+                  }
+                  else if (i * 2 + 2 < n && a[i * 2 + 1] < a[i * 2 + 2] && a[i] < a[i * 2 + 2])
+                  {
+                        swap(a[i], a[i * 2 + 2]);
+                        i = i * 2 + 2;
+                  }
+                  else if (i * 2 + 1 < n && a[i] < a[i * 2 + 1])
+                  {
+                        swap(a[i], a[i * 2 + 1]);
+                        i = i * 2 + 1;
+                  }
+                  else break;
+            }
+      }
+}
+
+int main()
+{
+      int n;
+      cin >> n;
+
+      int a[n];
+      for (int i = 0; i < n; i++)
+      {
+            cin >> a[i];
+            heapify(a, i);
+      }
+
+      for (int i = 0, k = 1, t = 0; i < n; k *= 2, t++)
+      {
+            cout << "Step - " << t << ": ";
+            for (int j = 0; i < n && j < k; i++, j++)
+            {
+                  cout << a[i] << sp;
+            }
+            cout << el;
+      }
+      cout << el;
+
+      heapSort(a, n);
+
+      cout << "Sorted Array: ";
+      for (int i = 0; i < n; i++)
+      {
+            cout << a[i] << sp;
+      }
+      cout << el;
+}
+
+
+--------------------------------------------------
+12
+12. Write a program to display the adjacency matrix of a graph.
+--------------------------------------------------
+
+#include <bits/stdc++.h>
+using namespace std;
+
+#define sp " "
+#define el '\n'
+
+int main()
+{
+      int n, m;
+
+      cout << "Input the number of nodes: ";
+      cin >> n;
+      cout << "Input the number of edges: ";
+      cin >> m;
+
+      int adjMat[100][100];
+      for (int i = 0; i < n; i++)
+      {
+            for (int j = 0; j < n; j++)
+            {
+                  adjMat[i][j] = 0;
+            }
+      }
+
+      cout << "Input the nodes connecting the edge: " << el;
+      for (int i = 0; i < m; i++)
+      {
+            int t1, t2;
+            cin >> t1 >> t2;
+
+            adjMat[t1 - 1][t2 - 1] = 1;
+            adjMat[t2 - 1][t1 - 1] = 1;
+      }
+
+      cout << el << "Adjacency Matrix:" << el;
+      for (int i = 0; i < n; i++)
+      {
+            for (int j = 0; j < n; j++)
+            {
+                  cout << adjMat[i][j] << sp;
+            }
+            cout << el;
+      }
+}
+
+
+--------------------------------------------------
+13
+13. Write a program to display the path matrix of a graph from an adjacency matrix.
+--------------------------------------------------
+
+#include <bits/stdc++.h>
+using namespace std;
+
+#define sp " "
+#define el '\n'
+
+void MatrixMlt(int a[100][100], int aa[100][100], int n)
+{
+      int result[100][100];
+
+      for (int i = 0; i < n; i++)
+      {
+            for (int j = 0; j < n; j++)
+            {
+                  int t = 0;
+                  for (int k = 0; k < n; k++)
+                  {
+                        t += a[i][k] * aa[k][j];
+                  }
+                  result[i][j] = t;
+            }
+      }
+
+      for (int i = 0; i < n; i++)
+      {
+            for (int j = 0; j < n; j++)
+            {
+                  aa[i][j] = result[i][j];
+            }
+      }
+}
+
+int main()
+{
+      int n, m;
+
+      cout << "Input the number of nodes: ";
+      cin >> n;
+      cout << "Input the number of edges: ";
+      cin >> m;
+
+      int a[100][100], aa[100][100], sum[100][100];
+      for (int i = 0; i < n; i++)
+      {
+            for (int j = 0; j < n; j++)
+            {
+                  a[i][j] = aa[i][j] = sum[i][j] = 0;
+            }
+      }
+
+      cout << "Input the edges: " << el;
+      for (int i = 0; i < m; i++)
+      {
+            int t1, t2;
+            cin >> t1 >> t2;
+
+            a[t1 - 1][t2 - 1] = aa[t1 - 1][t2 - 1] = sum[t1 - 1][t2 - 1] = 1;
+      }
+
+      cout << el << "Adjacency Matrix:" << el;
+      for (int i = 0; i < n; i++)
+      {
+            for (int j = 0; j < n; j++)
+            {
+                  cout << a[i][j] << sp;
+            }
+            cout << el;
+      }
+
+      for (int i = 0; i < n - 1; i++)
+      {
+            MatrixMlt(a, aa, n);
+
+            for (int j = 0; j < n; j++)
+            {
+                  for (int k = 0; k < n; k++)
+                  {
+                        sum[j][k] += aa[j][k];
+                  }
+            }
+      }
+
+      cout << el << "Path Matrix:" << el;
+      for (int i = 0; i < n; i++)
+      {
+            for (int j = 0; j < n; j++)
+            {
+                  if (sum[i][j] != 0) cout << 1 << sp;
+                  else cout << 0 << sp;
+            }
+            cout << el;
+      }
+}
+
+
+--------------------------------------------------
+14
+14. Write a program to display the path matrix of a graph using Warshall’s algorithm.
+--------------------------------------------------
+
+#include <bits/stdc++.h>
+using namespace std;
+
+#define sp " "
+#define el '\n'
+
+void Display(int a[100][100], int n)
+{
+      for (int i = 0; i < n; i++)
+      {
+            for (int j = 0; j < n; j++)
+            {
+                  cout << a[i][j] << sp;
+            }
+            cout << el;
+      }
+}
+
+void Warshall(int a[100][100], int n)
+{
+      for (int k = 0; k < n; k++)
+      {
+            for (int i = 0; i < n; i++)
+            {
+                  for (int j = 0; j < n; j++)
+                  {
+                        a[i][j] = a[i][j] | (a[i][k] & a[k][j]);
+                  }
+            }
+      }
+}
+
+int main()
+{
+      int n, m;
+
+      cout << "Input the number of nodes: ";
+      cin >> n;
+      cout << "Input the number of edges: ";
+      cin >> m;
+
+      int a[100][100];
+      for (int i = 0; i < n; i++)
+      {
+            for (int j = 0; j < n; j++)
+            {
+                  a[i][j] = 0;
+            }
+      }
+
+      cout << "Input the edges: " << el;
+      for (int i = 0; i < m; i++)
+      {
+            int t1, t2;
+            cin >> t1 >> t2;
+
+            a[t1 - 1][t2 - 1] = 1;
+      }
+
+      cout << el << "Adjacency Matrix:" << el;
+      Display(a, n);
+
+      Warshall(a, n);
+
+      cout << el << "Path Matrix:" << el;
+      Display(a, n);
+}
+
+
+--------------------------------------------------
+15
+15. Write a program to display the adjacency list of a graph.
+--------------------------------------------------
+
+#include <bits/stdc++.h>
+using namespace std;
+
+#define sp " "
+#define el '\n'
+
+void Display(vector<int> adj[], int n)
+{
+      for (int i = 0; i < n; i++)
+      {
+            cout << i + 1 << " -> ";
+            for (int j: adj[i])
+            {
+                  cout << j + 1 << sp;
+            }
+            cout << el;
+      }
+}
+
+int main()
+{
+      int n, m;
+
+      cout << "Input the number of nodes: ";
+      cin >> n;
+      cout << "Input the number of edges: ";
+      cin >> m;
+
+      vector<int> adj[n];
+      for (int i = 0; i < m; i++)
+      {
+            int u, v;
+            cin >> u >> v;
+
+            adj[u - 1].push_back(v - 1);
+            adj[v - 1].push_back(u - 1);
+      }
+
+      cout << el << "Adjacency List:" << el;
+      Display(adj, n);
+}
+
+
+--------------------------------------------------
+16
+16. Write a program to traverse a graph using Breadth First Search.
+--------------------------------------------------
+
+#include <bits/stdc++.h>
+using namespace std;
+
+#define sp " "
+#define el '\n'
+
+void BFS(vector<int> adj[], int start, int n)
+{
+      vector<bool> visited(n);
+      queue<int> q;
+
+      visited[start] = 1;
+      q.push(start);
+
+      cout << el << "BFS Traversal:" << el;
+
+      while (!q.empty())
+      {
+            int u = q.front();
+            q.pop();
+
+            cout << u + 1 << sp;
+
+            for (int v: adj[u])
+            {
+                  if (!visited[v])
+                  {
+                        visited[v] = true;
+                        q.push(v);
+                  }
+            }
+      }
+      cout << el;
+}
+
+int main()
+{
+      int n, m;
+
+      cout << "Input the number of nodes: ";
+      cin >> n;
+      cout << "Input the number of edges: ";
+      cin >> m;
+
+      vector<int> adj[n];
+      for (int i = 0; i < m; i++)
+      {
+            int u, v;
+            cin >> u >> v;
+
+            adj[u - 1].push_back(v - 1);
+            adj[v - 1].push_back(u - 1);
+      }
+
+      int start;
+      cout << "Input the starting node for BFS: ";
+      cin >> start;
+
+      BFS(adj, start - 1, n);
+}
+
+
+--------------------------------------------------
+17
+17. Write a program to traverse a graph using Depth First Search.
+--------------------------------------------------
+
+#include <bits/stdc++.h>
+using namespace std;
+
+#define sp " "
+#define el '\n'
+
+void DFS(vector<int> adj[], int start, int n)
+{
+      vector<bool> visited(n);
+      stack<int> s;
+
+      s.push(start);
+
+      cout << el << "DFS Traversal:" << el;
+
+      while (!s.empty())
+      {
+            int u = s.top();
+            s.pop();
+
+            if (!visited[u])
+            {
+                  cout << u + 1 << sp;
+                  visited[u] = true;
+            }
+
+            for (int v: adj[u])
+            {
+                  if (!visited[v])
+                        s.push(v);
+            }
+      }
+      cout << el;
+}
+
+int main()
+{
+      int n, m;
+
+      cout << "Input the number of nodes: ";
+      cin >> n;
+      cout << "Input the number of edges: ";
+      cin >> m;
+
+      vector<int> adj[n];
+
+      cout << "Input the edges: " << el;
+      for (int i = 0; i < m; i++)
+      {
+            int u, v;
+            cin >> u >> v;
+
+            adj[u - 1].push_back(v - 1);
+            adj[v - 1].push_back(u - 1);
+      }
+
+      int start;
+      cout << "Input the starting node for DFS: ";
+      cin >> start;
+
+      DFS(adj, start - 1, n);
+}
+
+
+--------------------------------------------------
+18
+18. Write a program to implement a hash table using Division method & use linear probing for collision resolution.
+--------------------------------------------------
+
+#include <bits/stdc++.h>
+using namespace std;
+
+#define el "\n"
+
+int main()
+{
+      int n;
+      cin >> n;
+
+      vector<int> a(n, -1);
+
+      for (int i = 0; i < n; i++)
+      {
+            int t;
+            cin >> t;
+
+            if (a[t % n] == -1)
+            {
+                  a[t % n] = t;
+            }
+            else
+            {
+                  for (int j = 1; 1; j++)
+                  {
+                        if (a[((t % n) + j) % n] == -1)
+                        {
+                              a[((t % n) + j) % n] = t;
+                              break;
+                        }
+                  }
+            }
+      }
+
+      cout << el;
+      for (int i = 0; i < n; i++)
+      {
+            cout << a[i] << el;
+      }
+}
+
+
+--------------------------------------------------
+19
+19. Write a program to implement a hash table using Division method & use double hashing for collision resolution.
+--------------------------------------------------
+
+#include <bits/stdc++.h>
+using namespace std;
+
+#define sp " "
+#define el '\n'
+
+int main()
+{
+      int n;
+      cin >> n;
+
+      int a[n];
+      for (int i = 0; i < n; i++)
+            a[i] = -1;
+
+      for (int i = 0; i < n; i++)
+      {
+            int t;
+            cin >> t;
+            
+            int index = t % n;
+
+            if (a[index] == -1) a[index] = t;
+            else
+            {
+                  int i = 1;
+
+                  while (a[(index + i * (1 + t % (n - 1))) % n] != -1)
+                        i++;
+
+                  a[(index + i * (1 + t % (n - 1))) % n] = t;
+            }
+      }
+      
+      for (int i = 0; i < n; i++)
+      {
+            cout << a[i] << sp;
+      }
+      cout << el;
+}
+
+
+--------------------------------------------------
+20
+20. Write a program to implement a hash table using chaining method for collision resolution.
+--------------------------------------------------
+
+#include <bits/stdc++.h>
+using namespace std;
+
+#define sp " "
+#define el '\n'
+
+struct Node
+{
+      int num;
+      struct Node *next;
+};
+
+int main()
+{
+      int n;
+      cin >> n;
+
+      Node *a[n] = {};
+
+      for (int i = 0; i < n; i++)
+      {
+            int t;
+            cin >> t;
+            
+            int index = t % n;
+            if (a[index] == nullptr)
+            {
+                  a[index] = new Node();
+                  a[index]->num = t;
+                  a[index]->next = nullptr;
+            }
+            else
+            {
+                  Node *ptr = a[index];
+                  while (ptr->next != nullptr)
+                        ptr = ptr->next;
+
+                  ptr->next = new Node();
+                  ptr = ptr->next;
+                  ptr->num = t;
+                  ptr->next = nullptr;
+            }
+      }
+      
+      for (int i = 0; i < n; i++)
+      {
+            cout << "Index " << i << ": ";
+            
+            Node* ptr = a[i];
+            while (ptr != nullptr)
+            {
+                  cout << ptr->num << " -> ";
+                  ptr = ptr->next;
+            }
+            cout << "NULL" << el;
+      }
+}
